@@ -31,14 +31,21 @@
   --space-10: 40px;
   --space-16: 64px;
 
+  /* Fixed header heights (padding + logo), kept in sync with .site-header
+     below so body padding-top always matches the header's real height */
+  --header-height-m: 54px;
+  --header-height-d: 86px;
+
   /* Type scale (desktop) */
   --eyebrow-size-d: 16px;
   --heading-size-d: 58px;
   --heading-line-d: 68px;
-  --body-size-d: 24px;
-  --body-line-d: 34px;
-  --body-bold-size-d: 28px;
-  --body-bold-line-d: 32px;
+  --subhead-size-d: 24px;
+  --subhead-line-d: 34px;
+  --subhead-bold-size-d: 28px;
+  --subhead-bold-line-d: 32px;
+  --body-size-d: 18px;
+  --body-line-d: 24px;
   --button-size-d: 16px;
   --button-large-size-d: 24px;
 
@@ -46,10 +53,12 @@
   --eyebrow-size-m: 14px;
   --heading-size-m: 32px;
   --heading-line-m: 38px;
-  --body-size-m: 18px;
+  --subhead-size-m: 18px;
+  --subhead-line-m: 24px;
+  --subhead-bold-size-m: 18px;
+  --subhead-bold-line-m: 24px;
+  --body-size-m: 16px;
   --body-line-m: 24px;
-  --body-bold-size-m: 18px;
-  --body-bold-line-m: 24px;
 
   --legal-size: 16px;
 }
@@ -62,6 +71,7 @@
 
 body {
   margin: 0;
+  padding-top: var(--header-height-m);
   background: var(--color-cream);
   color: var(--color-ink);
   font-family: var(--font-body);
@@ -105,8 +115,8 @@ a {
 .body-text {
   margin: 0;
   font-weight: 400;
-  font-size: var(--body-size-m);
-  line-height: var(--body-line-m);
+  font-size: var(--subhead-size-m);
+  line-height: var(--subhead-line-m);
 }
 
 .btn {
@@ -155,10 +165,24 @@ a {
 /* ---------- Header ---------- */
 
 .site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: var(--space-4) var(--space-6);
+  background: var(--color-cream);
+  transition: transform 0.25s ease;
+}
+
+/* Mobile only (see JS): slides the header off-screen while scrolling down,
+   and back into view as soon as the user scrolls up. Desktop stays fixed
+   and always visible — this class is never applied there. */
+.site-header--hidden {
+  transform: translateY(-100%);
 }
 
 .site-header__logo img {
@@ -236,16 +260,19 @@ a {
 /* Floating product images: arranged as equidistant "spokes" on an ellipse
    around the hero copy (tall on narrow screens, to leave the center column
    room; wide on desktop), each angled outward, with the whole ring
-   continuously revolving clockwise around the center.
+   revolving clockwise in lockstep with page scroll (see js/main.js) —
+   static when the user isn't scrolling, reversing direction when they
+   scroll back up.
 
    Position is computed directly with trig instead of the common
    "rotate+translate on a circle, then non-uniformly scale it into an
    ellipse" trick — a non-uniform `scale()` would stretch every pixel of
-   each image, not just its position. `--hero-spin` is an animated custom
-   property (declared with `@property` so it interpolates as a real angle)
-   inherited by every floater; each one adds its own fixed `--offset` and
-   plots x = rx·sin(angle), y = -ry·cos(angle), then rotates in place
-   (rotation alone never distorts an image's aspect ratio).
+   each image, not just its position. `--hero-spin` is a custom property
+   (declared with `@property` so it interpolates as a real angle) driven
+   directly by scroll position in JS and inherited by every floater; each
+   one adds its own fixed `--offset` and plots x = rx·sin(angle),
+   y = -ry·cos(angle), then rotates in place (rotation alone never distorts
+   an image's aspect ratio).
 
    The radii themselves are fluid (viewport-width-interpolated via
    `clamp()`), not breakpoint-switched — so the ellipse continuously
@@ -269,17 +296,7 @@ a {
   --hero-spin: 0deg;
   --orbit-rx: clamp(185px, calc(185px + (100vw - 390px) * 0.3305), 532px);
   --orbit-ry: clamp(259px, calc(259px + (100vw - 390px) * 0.0610), 323px);
-  animation: hero-spin 40s linear infinite;
   pointer-events: none;
-}
-
-@keyframes hero-spin {
-  from {
-    --hero-spin: 0deg;
-  }
-  to {
-    --hero-spin: 360deg;
-  }
 }
 
 .hero__floaters img {
@@ -312,19 +329,35 @@ a {
 .marquee {
   overflow: hidden;
   padding: var(--space-8) 0;
+  container-type: inline-size;
 }
 
+/* Two identical copies back-to-back, shifted by JS (see js/main.js) based
+   on scroll position: right-to-left as the page scrolls down, reversing on
+   scroll up, with no movement at all while the page is still. The copy is
+   wide enough that translating by one copy's width lands on a pixel-
+   identical state, so the loop is seamless in either direction no matter
+   how far the user scrolls. */
+.marquee__track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+/* Font size is driven by container query units (cqw), not breakpoints, so
+   it continuously scales with the banner's own width and the full phrase
+   always fits on exactly one line, at any viewport size. */
 .marquee__text {
   margin: 0;
+  flex: 0 0 auto;
   font-family: var(--font-display);
   font-weight: 300;
   font-style: italic;
   font-variation-settings: 'SOFT' 0, 'WONK' 1;
-  font-size: 32px;
-  line-height: 38px;
+  font-size: min(2.9cqw, 64px);
+  line-height: 1.2;
   color: var(--color-ember);
-  text-align: center;
-  white-space: normal;
+  white-space: nowrap;
 }
 
 /* ---------- Benefits ---------- */
@@ -358,8 +391,8 @@ a {
 .benefits__copy h3 {
   margin: 0;
   font-weight: 600;
-  font-size: var(--body-bold-size-m);
-  line-height: var(--body-bold-line-m);
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
 }
 
 .benefits__copy p {
@@ -430,8 +463,8 @@ a {
 .faq__item h3 {
   margin: 0;
   font-weight: 600;
-  font-size: var(--body-bold-size-m);
-  line-height: var(--body-bold-line-m);
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
 }
 
 .faq__item p {
@@ -486,8 +519,8 @@ a {
 .audience__card h3 {
   margin: 0;
   font-weight: 600;
-  font-size: var(--body-bold-size-m);
-  line-height: var(--body-bold-line-m);
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
 }
 
 .audience__card p {
@@ -550,6 +583,10 @@ a {
    ========================================================= */
 
 @media (min-width: 960px) {
+  body {
+    padding-top: var(--header-height-d);
+  }
+
   .site-header {
     padding: var(--space-6) var(--space-10);
   }
@@ -587,8 +624,8 @@ a {
   }
 
   .hero__content .body-text {
-    font-size: var(--body-size-d);
-    line-height: var(--body-line-d);
+    font-size: var(--subhead-size-d);
+    line-height: var(--subhead-line-d);
   }
 
   .hero__floater--diet-coke { width: 131px; }
@@ -599,17 +636,6 @@ a {
   .hero__floater--reeses { width: 129px; }
   .hero__floater--san-pellegrino { width: 98px; }
   .hero__floater--boulder-chips { width: 133px; }
-
-  .marquee {
-    padding: var(--space-8) 0;
-    transform: rotate(0deg);
-  }
-
-  .marquee__text {
-    font-size: var(--heading-size-d);
-    line-height: var(--heading-line-d);
-    white-space: nowrap;
-  }
 
   .benefits {
     gap: var(--space-16);
@@ -634,16 +660,16 @@ a {
   }
 
   .benefits__intro .body-text {
-    font-size: var(--body-size-d);
-    line-height: var(--body-line-d);
+    font-size: var(--subhead-size-d);
+    line-height: var(--subhead-line-d);
     max-width: 888px;
   }
 
   .benefits__copy h3,
   .audience__card h3,
   .faq__item h3 {
-    font-size: var(--body-bold-size-d);
-    line-height: var(--body-bold-line-d);
+    font-size: var(--subhead-bold-size-d);
+    line-height: var(--subhead-bold-line-d);
   }
 
   .benefits__copy p,
