@@ -210,7 +210,7 @@ a {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 700px;
+  height: 760px;
 }
 
 .hero__content {
@@ -233,9 +233,32 @@ a {
   line-height: 24px;
 }
 
-/* Floating product images: arranged as equidistant "spokes" around the hero
-   copy, each angled outward, with the whole ring continuously revolving
-   clockwise around the center. */
+/* Floating product images: arranged as equidistant "spokes" on an ellipse
+   around the hero copy (tall on narrow screens, to leave the center column
+   room; wide on desktop), each angled outward, with the whole ring
+   continuously revolving clockwise around the center.
+
+   Position is computed directly with trig instead of the common
+   "rotate+translate on a circle, then non-uniformly scale it into an
+   ellipse" trick — a non-uniform `scale()` would stretch every pixel of
+   each image, not just its position. `--hero-spin` is an animated custom
+   property (declared with `@property` so it interpolates as a real angle)
+   inherited by every floater; each one adds its own fixed `--offset` and
+   plots x = rx·sin(angle), y = -ry·cos(angle), then rotates in place
+   (rotation alone never distorts an image's aspect ratio).
+
+   The radii themselves are fluid (viewport-width-interpolated via
+   `clamp()`), not breakpoint-switched — so the ellipse continuously
+   reshapes as the window resizes (tall at phone widths, wide at desktop)
+   instead of visibly snapping at one cutoff and looking squished on
+   in-between, tablet-ish widths. Pinned to the tuned mobile (390px) and
+   desktop (1440px) shapes at each end. */
+
+@property --hero-spin {
+  syntax: '<angle>';
+  inherits: true;
+  initial-value: 0deg;
+}
 
 .hero__floaters {
   position: absolute;
@@ -243,16 +266,19 @@ a {
   top: 50%;
   width: 0;
   height: 0;
+  --hero-spin: 0deg;
+  --orbit-rx: clamp(185px, calc(185px + (100vw - 390px) * 0.3305), 532px);
+  --orbit-ry: clamp(259px, calc(259px + (100vw - 390px) * 0.0610), 323px);
   animation: hero-spin 40s linear infinite;
   pointer-events: none;
 }
 
 @keyframes hero-spin {
   from {
-    transform: translate(-50%, -50%) rotate(0deg);
+    --hero-spin: 0deg;
   }
   to {
-    transform: translate(-50%, -50%) rotate(360deg);
+    --hero-spin: 360deg;
   }
 }
 
@@ -261,18 +287,25 @@ a {
   top: 0;
   left: 0;
   max-width: none;
-  transform-origin: 0 0;
   pointer-events: none;
+  --angle: calc(var(--hero-spin) + var(--offset, 0deg));
+  transform:
+    translate(
+      calc(sin(var(--angle)) * var(--orbit-rx)),
+      calc(-1 * cos(var(--angle)) * var(--orbit-ry))
+    )
+    translate(-50%, -50%)
+    rotate(var(--angle));
 }
 
-.hero__floater--diet-coke { transform: rotate(0deg) translate(0, -210px) translate(-50%, -50%); width: 72px; }
-.hero__floater--potato-crisp { transform: rotate(45deg) translate(0, -210px) translate(-50%, -50%); width: 64px; }
-.hero__floater--fiji-water { transform: rotate(90deg) translate(0, -210px) translate(-50%, -50%); width: 60px; }
-.hero__floater--green-snack { transform: rotate(135deg) translate(0, -210px) translate(-50%, -50%); width: 62px; }
-.hero__floater--poppi { transform: rotate(180deg) translate(0, -210px) translate(-50%, -50%); width: 50px; }
-.hero__floater--reeses { transform: rotate(225deg) translate(0, -210px) translate(-50%, -50%); width: 64px; }
-.hero__floater--san-pellegrino { transform: rotate(270deg) translate(0, -210px) translate(-50%, -50%); width: 58px; }
-.hero__floater--boulder-chips { transform: rotate(315deg) translate(0, -210px) translate(-50%, -50%); width: 70px; }
+.hero__floater--diet-coke { --offset: 0deg; width: 65px; }
+.hero__floater--potato-crisp { --offset: 45deg; width: 58px; }
+.hero__floater--fiji-water { --offset: 90deg; width: 54px; }
+.hero__floater--green-snack { --offset: 135deg; width: 56px; }
+.hero__floater--poppi { --offset: 180deg; width: 45px; }
+.hero__floater--reeses { --offset: 225deg; width: 64px; }
+.hero__floater--san-pellegrino { --offset: 270deg; width: 52px; }
+.hero__floater--boulder-chips { --offset: 315deg; width: 63px; }
 
 /* ---------- Marquee / service banner ---------- */
 
@@ -558,14 +591,14 @@ a {
     line-height: var(--body-line-d);
   }
 
-  .hero__floater--diet-coke { transform: rotate(0deg) translate(0, -380px) translate(-50%, -50%); width: 146px; }
-  .hero__floater--potato-crisp { transform: rotate(45deg) translate(0, -380px) translate(-50%, -50%); width: 122px; }
-  .hero__floater--fiji-water { transform: rotate(90deg) translate(0, -380px) translate(-50%, -50%); width: 103px; }
-  .hero__floater--green-snack { transform: rotate(135deg) translate(0, -380px) translate(-50%, -50%); width: 128px; }
-  .hero__floater--poppi { transform: rotate(180deg) translate(0, -380px) translate(-50%, -50%); width: 93px; }
-  .hero__floater--reeses { transform: rotate(225deg) translate(0, -380px) translate(-50%, -50%); width: 129px; }
-  .hero__floater--san-pellegrino { transform: rotate(270deg) translate(0, -380px) translate(-50%, -50%); width: 109px; }
-  .hero__floater--boulder-chips { transform: rotate(315deg) translate(0, -380px) translate(-50%, -50%); width: 148px; }
+  .hero__floater--diet-coke { width: 131px; }
+  .hero__floater--potato-crisp { width: 110px; }
+  .hero__floater--fiji-water { width: 93px; }
+  .hero__floater--green-snack { width: 115px; }
+  .hero__floater--poppi { width: 84px; }
+  .hero__floater--reeses { width: 129px; }
+  .hero__floater--san-pellegrino { width: 98px; }
+  .hero__floater--boulder-chips { width: 133px; }
 
   .marquee {
     padding: var(--space-8) 0;
