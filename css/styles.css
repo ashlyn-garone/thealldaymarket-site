@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=Google+Sans+Flex:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ital,wght@0,100..900;1,100..900&display=swap');
 
 :root {
   /* Brand colors (from logo + favicon) */
@@ -6,8 +6,11 @@
   --color-brand-orange: #f3784e;
   --color-bg: #ffffff;
 
-  /* Fonts */
-  --font-display: 'Fraunces', serif;
+  /* Fonts. Headings used to be set in Fraunces (serif); the design moved
+     to Google Sans Flex SemiBold everywhere, so --font-display now just
+     points at the same family as --font-body. Kept as a separate variable
+     in case display type diverges again later. */
+  --font-display: 'Google Sans Flex', sans-serif;
   --font-body: 'Google Sans Flex', sans-serif;
 
   /* Homepage palette (from Figma variables) */
@@ -42,8 +45,8 @@
   --heading-line-d: 68px;
   --subhead-size-d: 24px;
   --subhead-line-d: 34px;
-  --subhead-bold-size-d: 28px;
-  --subhead-bold-line-d: 32px;
+  --subhead-bold-size-d: 24px;
+  --subhead-bold-line-d: 30px;
   --body-size-d: 18px;
   --body-line-d: 24px;
   --button-size-d: 16px;
@@ -91,8 +94,8 @@ a {
 .heading {
   margin: 0;
   font-family: var(--font-display);
-  font-weight: 400;
-  font-variation-settings: 'SOFT' 0, 'WONK' 1;
+  font-weight: 600;
+  font-variation-settings: 'GRAD' 0, 'ROND' 0, 'wdth' 100;
   font-size: var(--heading-size-m);
   line-height: var(--heading-line-m);
 }
@@ -100,7 +103,7 @@ a {
 .heading em,
 .heading i {
   font-style: italic;
-  font-weight: 400;
+  font-weight: 600;
 }
 
 .eyebrow {
@@ -324,41 +327,6 @@ a {
 .hero__floater--san-pellegrino { --offset: 270deg; width: 52px; }
 .hero__floater--boulder-chips { --offset: 315deg; width: 63px; }
 
-/* ---------- Marquee / service banner ---------- */
-
-.marquee {
-  overflow: hidden;
-  padding: var(--space-8) 0;
-  container-type: inline-size;
-}
-
-/* Two identical copies back-to-back, shifted by JS (see js/main.js) based
-   on scroll position: right-to-left as the page scrolls down, reversing on
-   scroll up, with no movement at all while the page is still. The copy is
-   wide enough that translating by one copy's width lands on a pixel-
-   identical state, so the loop is seamless in either direction no matter
-   how far the user scrolls. */
-.marquee__track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-
-/* Font size is driven by container query units (cqw), not breakpoints, so
-   it continuously scales with the banner's own width and the full phrase
-   always fits on exactly one line, at any viewport size. */
-.marquee__text {
-  margin: 0;
-  flex: 0 0 auto;
-  font-family: var(--font-display);
-  font-weight: 300;
-  font-style: italic;
-  font-variation-settings: 'SOFT' 0, 'WONK' 1;
-  font-size: min(2.9cqw, 64px);
-  line-height: 1.2;
-  color: var(--color-ember);
-  white-space: nowrap;
-}
 
 /* ---------- Benefits ---------- */
 
@@ -552,7 +520,6 @@ a {
   width: 100%;
   max-width: 382px;
   height: auto;
-  filter: invert(1);
 }
 
 .site-footer__nav {
