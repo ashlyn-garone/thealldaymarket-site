@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Contact support — The All Day Market</title>
+  <meta name="description" content="Having an issue with a market at your property? Let us know.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="site-header__logo">
+      <img src="images/logo.svg" alt="The All Day Market">
+    </a>
+    <nav class="site-header__nav">
+      <a href="request.html" class="btn btn--primary">Get a market in your space</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <img src="images/icon-menu.svg" alt="">
+    </button>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html" class="mobile-nav__link">Home</a>
+    <a href="request.html" class="mobile-nav__link">Get a market in your space</a>
+    <a href="support.html" class="mobile-nav__link">Contact support</a>
+  </nav>
+
+  <main>
+    <section class="form-page">
+      <div class="form-page__intro">
+        <p class="eyebrow">We're here to help</p>
+        <h1 class="heading">Contact support</h1>
+        <p class="body-text">Having an issue with a market at your property? Let us know and we'll get it sorted.</p>
+      </div>
+
+      <form class="form" id="supportForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
+        <!-- Get your access key at web3forms.com, then replace the value below
+             (used by both request.html and support.html). -->
+        <input type="hidden" name="access_key" value="REPLACE_WITH_YOUR_WEB3FORMS_ACCESS_KEY">
+        <input type="hidden" name="subject" value="Support ticket — The All Day Market">
+        <input type="checkbox" name="botcheck" class="form__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="form__field">
+          <label class="form__label" for="support-name">Name</label>
+          <input class="form__input" type="text" id="support-name" name="name" autocomplete="name" required aria-describedby="support-name-error">
+          <span class="form__error" id="support-name-error">Please enter your name.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="support-email">Email</label>
+          <input class="form__input" type="email" id="support-email" name="email" autocomplete="email" required aria-describedby="support-email-error">
+          <span class="form__error" id="support-email-error">Please enter a valid email address.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="support-location">Location</label>
+          <input class="form__input" type="text" id="support-location" name="location" placeholder="e.g. Building lobby, 3rd floor break room" required aria-describedby="support-location-error">
+          <span class="form__error" id="support-location-error">Please tell us which market or location this is about.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="support-message">What's going on?</label>
+          <textarea class="form__textarea" id="support-message" name="message" rows="5" required aria-describedby="support-message-error"></textarea>
+          <span class="form__error" id="support-message-error">Please describe the issue.</span>
+        </div>
+
+        <button class="btn btn--primary form__submit" type="submit">Send message</button>
+      </form>
+
+      <div class="form__status" id="supportFormStatus">
+        <div class="form__success" role="status" hidden>
+          <h2>Thanks — we've got it.</h2>
+          <p>We've received your message and will follow up shortly.</p>
+        </div>
+        <div class="form__failure" role="alert" hidden>
+          <p>Something went wrong sending your message. Please try again, or email us directly at <a href="mailto:tom@thealldaymarket.com">tom@thealldaymarket.com</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer inverse">
+    <div class="site-footer__wordmark">
+      <img src="images/logo-footer.svg" alt="The All Day Market">
+    </div>
+    <nav class="site-footer__nav">
+      <div class="site-footer__contact">
+        <a href="request.html" class="btn btn--secondary">Get a market in your space</a>
+        <a href="support.html" class="nav-link nav-link--light">Contact support</a>
+      </div>
+      <div class="site-footer__legal">
+        <span>©The All Day Market</span>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </div>
+    </nav>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

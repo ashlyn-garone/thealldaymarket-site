@@ -89,6 +89,34 @@ img {
 
 a {
   color: inherit;
+  transition: color 300ms ease-in;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-treat);
+  outline-offset: 2px;
+}
+
+/* Scroll-reveal: images with this class fade and rise into place the
+   first time they enter the viewport (see js/main.js). */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
 }
 
 .heading {
@@ -135,6 +163,7 @@ a {
   text-decoration: none;
   cursor: pointer;
   white-space: nowrap;
+  transition: background-color 300ms ease-in, color 300ms ease-in;
 }
 
 .btn--primary {
@@ -155,6 +184,12 @@ a {
   padding: var(--space-6);
 }
 
+.btn:hover,
+.btn:active {
+  background: var(--color-midnight);
+  color: var(--color-on-dark);
+}
+
 .nav-link {
   font-weight: 600;
   font-size: var(--button-size-d);
@@ -163,6 +198,13 @@ a {
 
 .nav-link--light {
   color: var(--color-on-dark);
+}
+
+.nav-link:hover,
+.nav-link:active,
+.nav-link--light:hover,
+.nav-link--light:active {
+  color: var(--color-midnight);
 }
 
 /* ---------- Header ---------- */
@@ -219,14 +261,49 @@ a {
 
 .mobile-nav {
   display: none;
+  position: fixed;
+  top: var(--header-height-m);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 90;
   flex-direction: column;
   align-items: flex-start;
-  gap: var(--space-4);
-  padding: 0 var(--space-6) var(--space-6);
+  gap: var(--space-10);
+  padding: var(--space-16) var(--space-6);
+  background: var(--color-cream);
+  overflow-y: auto;
 }
 
 .mobile-nav.is-open {
   display: flex;
+}
+
+body.nav-open {
+  overflow: hidden;
+}
+
+.mobile-nav__link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-variation-settings: 'GRAD' 0, 'ROND' 0, 'wdth' 100;
+  font-size: var(--heading-size-m);
+  line-height: var(--heading-line-m);
+  color: var(--color-ink);
+  text-decoration: none;
+}
+
+.mobile-nav__link--current {
+  color: var(--color-ember);
+}
+
+.mobile-nav__link:hover,
+.mobile-nav__link:active {
+  color: var(--color-midnight);
+}
+
+.mobile-nav__current-mark {
+  margin-left: var(--space-2);
 }
 
 /* ---------- Hero ---------- */
@@ -263,16 +340,14 @@ a {
 /* Floating product images: arranged as equidistant "spokes" on an ellipse
    around the hero copy (tall on narrow screens, to leave the center column
    room; wide on desktop), each angled outward, with the whole ring
-   revolving clockwise in lockstep with page scroll (see js/main.js) —
-   static when the user isn't scrolling, reversing direction when they
-   scroll back up.
+   revolving clockwise in a slow, constant loop.
 
    Position is computed directly with trig instead of the common
    "rotate+translate on a circle, then non-uniformly scale it into an
    ellipse" trick — a non-uniform `scale()` would stretch every pixel of
    each image, not just its position. `--hero-spin` is a custom property
    (declared with `@property` so it interpolates as a real angle) driven
-   directly by scroll position in JS and inherited by every floater; each
+   by a looping CSS animation and inherited by every floater; each
    one adds its own fixed `--offset` and plots x = rx·sin(angle),
    y = -ry·cos(angle), then rotates in place (rotation alone never distorts
    an image's aspect ratio).
@@ -300,6 +375,19 @@ a {
   --orbit-rx: clamp(185px, calc(185px + (100vw - 390px) * 0.3305), 532px);
   --orbit-ry: clamp(259px, calc(259px + (100vw - 390px) * 0.0610), 323px);
   pointer-events: none;
+  animation: hero-orbit 40s linear infinite;
+}
+
+@keyframes hero-orbit {
+  to {
+    --hero-spin: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__floaters {
+    animation: none;
+  }
 }
 
 .hero__floaters img {
@@ -545,6 +633,23 @@ a {
   text-decoration: none;
 }
 
+/* ---------- Inverse (dark-background) hover states ----------
+   Add `.inverse` to any section with a dark/ink background (the footer,
+   and any future one) so its links and button backgrounds hover to
+   color-treat instead of the default color-midnight, which barely shows
+   up against a dark background. */
+
+.inverse a:hover,
+.inverse a:active {
+  color: var(--color-treat);
+}
+
+.inverse .btn:hover,
+.inverse .btn:active {
+  background: var(--color-treat);
+  color: var(--color-ink);
+}
+
 /* =========================================================
    Desktop layout (>= 960px)
    ========================================================= */
@@ -567,7 +672,8 @@ a {
   }
 
   .menu-toggle,
-  .mobile-nav {
+  .mobile-nav,
+  .mobile-nav.is-open {
     display: none;
   }
 
@@ -653,21 +759,27 @@ a {
   .benefits__copy--stock { grid-area: stock; }
   .benefits__copy--managed { grid-area: managed; }
 
+  .benefits__copy--open,
+  .benefits__copy--stock,
+  .benefits__copy--managed {
+    align-self: center;
+  }
+
   .benefits__photo--man-shopping {
     grid-area: man-shop;
-    height: 477px;
+    height: 277px;
     border-radius: 50px;
   }
 
   .benefits__photo--cookie {
     grid-area: cookie;
-    height: 421px;
+    height: 221px;
     border-radius: 9999px;
   }
 
   .benefits__photo--skyline {
     grid-area: skyline;
-    height: 561px;
+    height: 361px;
     border-radius: 9999px;
   }
 
@@ -801,6 +913,11 @@ a {
   text-decoration: underline;
 }
 
+.legal a:hover,
+.legal a:active {
+  color: var(--color-midnight);
+}
+
 .legal__placeholder {
   background: var(--color-ivory);
   padding: 2px 6px;
@@ -832,5 +949,185 @@ a {
   .legal h2 {
     font-size: var(--subhead-bold-size-d);
     line-height: var(--subhead-bold-line-d);
+  }
+}
+
+/* ---------- Forms (request, support) ---------- */
+
+.form-page {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: var(--space-16) var(--space-6);
+}
+
+.form-page__intro {
+  margin: 0 0 var(--space-10);
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.form[hidden] {
+  display: none;
+}
+
+.form__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.form__label {
+  font-weight: 600;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
+.form__label-optional {
+  font-weight: 400;
+}
+
+.form__input,
+.form__textarea {
+  font-family: var(--font-body);
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+  color: var(--color-ink);
+  background: var(--color-bg);
+  border: 1px solid var(--color-ivory);
+  border-radius: 12px;
+  padding: var(--space-4);
+}
+
+.form__textarea {
+  min-height: 140px;
+  resize: vertical;
+}
+
+.form__input:focus-visible,
+.form__textarea:focus-visible {
+  outline: 2px solid var(--color-treat);
+  outline-offset: 2px;
+  border-color: var(--color-treat);
+}
+
+.form__input[aria-invalid='true'],
+.form__textarea[aria-invalid='true'] {
+  border-color: var(--color-ember);
+}
+
+.form__error {
+  display: none;
+  color: var(--color-ember);
+  font-size: var(--legal-size);
+  line-height: 20px;
+}
+
+.form__error.is-visible {
+  display: block;
+}
+
+.form__honeypot {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.form__submit {
+  align-self: flex-start;
+}
+
+.form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.form__success,
+.form__failure {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 700ms ease-out, transform 700ms ease-out;
+}
+
+.form__success.is-visible,
+.form__failure.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .form__success,
+  .form__failure {
+    transition: none;
+  }
+}
+
+.form__success {
+  padding: var(--space-8);
+  border-radius: 24px;
+  background: var(--color-ivory);
+}
+
+.form__success h2 {
+  margin: 0 0 var(--space-2);
+  font-weight: 600;
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
+}
+
+.form__success p {
+  margin: 0;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
+.form__failure {
+  padding: var(--space-6);
+  border: 1px solid var(--color-ember);
+  border-radius: 16px;
+}
+
+.form__failure p {
+  margin: 0;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
+.form__failure a {
+  text-decoration: underline;
+}
+
+@media (min-width: 960px) {
+  .form-page {
+    padding: var(--space-16) var(--space-10) calc(var(--space-16) * 1.5);
+  }
+
+  .form-page__intro .eyebrow {
+    font-size: var(--eyebrow-size-d);
+    letter-spacing: 1.6px;
+  }
+
+  .form-page__intro .heading {
+    font-size: var(--heading-size-d);
+    line-height: var(--heading-line-d);
+  }
+
+  .form-page__intro .body-text {
+    font-size: var(--subhead-size-d);
+    line-height: var(--subhead-line-d);
+  }
+
+  .form__label,
+  .form__input,
+  .form__textarea,
+  .form__success p,
+  .form__failure p {
+    font-size: var(--body-size-d);
+    line-height: var(--body-line-d);
   }
 }

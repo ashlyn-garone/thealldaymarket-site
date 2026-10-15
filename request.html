@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Get a market in your space — The All Day Market</title>
+  <meta name="description" content="Request a free, fully managed smart market for your property.">
+  <link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <a href="index.html" class="site-header__logo">
+      <img src="images/logo.svg" alt="The All Day Market">
+    </a>
+    <nav class="site-header__nav">
+      <a href="request.html" class="btn btn--primary">Get a market in your space</a>
+    </nav>
+    <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="false" aria-controls="mobileNav" aria-label="Open menu">
+      <img src="images/icon-menu.svg" alt="">
+    </button>
+  </header>
+
+  <nav class="mobile-nav" id="mobileNav">
+    <a href="index.html" class="mobile-nav__link">Home</a>
+    <a href="request.html" class="mobile-nav__link">Get a market in your space</a>
+    <a href="support.html" class="mobile-nav__link">Contact support</a>
+  </nav>
+
+  <main>
+    <section class="form-page">
+      <div class="form-page__intro">
+        <p class="eyebrow">Let's get started</p>
+        <h1 class="heading">Get a market in your space</h1>
+        <p class="body-text">Tell us a bit about your property and we'll follow up to see if it's a good fit.</p>
+      </div>
+
+      <form class="form" id="requestForm" action="https://api.web3forms.com/submit" method="POST" novalidate>
+        <input type="hidden" name="access_key" value="f0f3a72a-6f12-4b8d-a44c-820d11ee8181">
+        <input type="hidden" name="subject" value="New market request — The All Day Market">
+        <input type="checkbox" name="botcheck" class="form__honeypot" tabindex="-1" autocomplete="off" aria-hidden="true">
+
+        <div class="form__field">
+          <label class="form__label" for="request-name">Name</label>
+          <input class="form__input" type="text" id="request-name" name="name" autocomplete="name" required aria-describedby="request-name-error">
+          <span class="form__error" id="request-name-error">Please enter your name.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="request-email">Email</label>
+          <input class="form__input" type="email" id="request-email" name="email" autocomplete="email" required aria-describedby="request-email-error">
+          <span class="form__error" id="request-email-error">Please enter a valid email address.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="request-phone">Phone</label>
+          <input class="form__input" type="tel" id="request-phone" name="phone" autocomplete="tel">
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="request-company">Company or property name</label>
+          <input class="form__input" type="text" id="request-company" name="company" autocomplete="organization" required aria-describedby="request-company-error">
+          <span class="form__error" id="request-company-error">Please enter your company or property name.</span>
+        </div>
+
+        <div class="form__field">
+          <label class="form__label" for="request-message">Tell us about your space <span class="form__label-optional">(optional)</span></label>
+          <textarea class="form__textarea" id="request-message" name="message" rows="5" placeholder="Property type, approximate daily foot traffic, where a market might go, etc."></textarea>
+        </div>
+
+        <button class="btn btn--primary form__submit" type="submit">Reach out</button>
+      </form>
+
+      <div class="form__status" id="requestFormStatus">
+        <div class="form__success" role="status" hidden>
+          <h2>Thanks — we'll be in touch.</h2>
+          <p>We've received your request and will reach out shortly to talk through next steps.</p>
+        </div>
+        <div class="form__failure" role="alert" hidden>
+          <p>Something went wrong sending your request. Please try again, or email us directly at <a href="mailto:tom@thealldaymarket.com">tom@thealldaymarket.com</a>.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer inverse">
+    <div class="site-footer__wordmark">
+      <img src="images/logo-footer.svg" alt="The All Day Market">
+    </div>
+    <nav class="site-footer__nav">
+      <div class="site-footer__contact">
+        <a href="request.html" class="btn btn--secondary">Get a market in your space</a>
+        <a href="support.html" class="nav-link nav-link--light">Contact support</a>
+      </div>
+      <div class="site-footer__legal">
+        <span>©The All Day Market</span>
+        <a href="privacy.html">Privacy policy</a>
+        <a href="terms.html">Terms of service</a>
+      </div>
+    </nav>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
