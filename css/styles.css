@@ -395,6 +395,7 @@ body.nav-open {
   top: 0;
   left: 0;
   max-width: none;
+  height: auto;
   pointer-events: none;
   --angle: calc(var(--hero-spin) + var(--offset, 0deg));
   transform:
