@@ -415,17 +415,6 @@ body.nav-open {
 .hero__floater--san-pellegrino { --offset: 270deg; width: 52px; }
 .hero__floater--boulder-chips { --offset: 315deg; width: 63px; }
 
-.intro-statement {
-  margin: 0;
-  padding: 0 var(--space-6) var(--space-8);
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: center;
-  font-size: var(--body-size-m);
-  line-height: var(--body-line-m);
-  opacity: 0.7;
-}
-
 /* ---------- Benefits ---------- */
 
 .benefits {
@@ -603,6 +592,33 @@ body.nav-open {
 .audience__card--schools { background: var(--color-pick-me-up); }
 .audience__card--hotels { background: var(--color-classic-light); }
 
+/* Tablet only: 2-up grid, alternating content/picture so every row reads
+   content-picture, then picture-content, all the way down. Explicit
+   `order` on every item since this pairing differs from both the mobile
+   single-column order and the desktop 4-up row layout. */
+@media (min-width: 768px) and (max-width: 959px) {
+  .audience__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .audience__tile--extra {
+    display: block;
+  }
+
+  .audience__card--apartments { order: 1; }
+  .audience__tile--man-browsing { order: 2; }
+  .audience__tile--selecting-drink { order: 3; }
+  .audience__card--gyms { order: 4; }
+  .audience__card--workplaces { order: 5; }
+  .audience__tile--candy { order: 6; }
+  .audience__tile--coworkers { order: 7; }
+  .audience__card--medical { order: 8; }
+  .audience__card--schools { order: 9; }
+  .audience__tile--salad { order: 10; }
+  .audience__tile--woman-browsing { order: 11; }
+  .audience__card--hotels { order: 12; }
+}
+
 /* ---------- Footer ---------- */
 
 .site-footer {
@@ -699,12 +715,6 @@ body.nav-open {
 
   .hero {
     height: 1000px;
-  }
-
-  .intro-statement {
-    font-size: var(--body-size-d);
-    line-height: var(--body-line-d);
-    padding-bottom: var(--space-16);
   }
 
   .hero__content {
@@ -833,6 +843,13 @@ body.nav-open {
 
   .audience__tile--extra {
     display: block;
+  }
+
+  .audience__tile--woman-browsing {
+    /* Mobile pins this tile last (order: 99); on the 4-column desktop
+       grid it needs to sit in its natural DOM position instead, to land
+       in row 3 (picture-content-picture-content). */
+    order: 0;
   }
 
   .audience__card {
@@ -1120,6 +1137,7 @@ body.nav-open {
 
 @media (min-width: 960px) {
   .form-page {
+    margin: 0 0 0 auto;
     padding: var(--space-16) var(--space-10) calc(var(--space-16) * 1.5);
   }
 
