@@ -415,6 +415,16 @@ body.nav-open {
 .hero__floater--san-pellegrino { --offset: 270deg; width: 52px; }
 .hero__floater--boulder-chips { --offset: 315deg; width: 63px; }
 
+.intro-statement {
+  margin: 0;
+  padding: 0 var(--space-6) var(--space-8);
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+  opacity: 0.7;
+}
 
 /* ---------- Benefits ---------- */
 
@@ -689,6 +699,12 @@ body.nav-open {
 
   .hero {
     height: 1000px;
+  }
+
+  .intro-statement {
+    font-size: var(--body-size-d);
+    line-height: var(--body-line-d);
+    padding-bottom: var(--space-16);
   }
 
   .hero__content {

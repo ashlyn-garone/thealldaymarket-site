@@ -147,6 +147,10 @@ document.querySelectorAll('.form').forEach((form) => {
 
       form.hidden = true;
       showStatus(successEl);
+
+      if (typeof gtag === 'function') {
+        gtag('event', 'generate_lead', { form_id: form.id });
+      }
     } catch (err) {
       showStatus(failureEl);
       if (submitBtn) {
