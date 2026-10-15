@@ -119,6 +119,47 @@ button:focus-visible {
   }
 }
 
+/* The benefits/audience content boxes sit directly beside reveal-animated
+   photos on tablet/desktop, where mismatched grids made the static boxes
+   look unfinished next to the animating images. They get the same
+   scroll-reveal there, timed to land just ahead of the photos (see the
+   transition-delay on .benefits__photo.reveal / .audience__tile img.reveal
+   below) so the content leads and the image follows. Left static on
+   mobile, where boxes and photos aren't paired side by side. */
+.benefits__copy.reveal,
+.audience__card.reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+@media (min-width: 768px) {
+  .benefits__copy.reveal,
+  .audience__card.reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 700ms ease-out, transform 700ms ease-out;
+  }
+
+  .benefits__copy.reveal.is-visible,
+  .audience__card.reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .benefits__photo.reveal,
+  .audience__tile img.reveal {
+    transition-delay: 120ms;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .benefits__copy.reveal,
+  .audience__card.reveal {
+    transition: none;
+  }
+}
+
 .heading {
   margin: 0;
   font-family: var(--font-display);
@@ -998,6 +1039,10 @@ body.nav-open {
   margin: 0 0 var(--space-10);
 }
 
+.form-page__intro .heading {
+  margin-bottom: var(--space-3);
+}
+
 .form {
   display: flex;
   flex-direction: column;
@@ -1138,8 +1183,29 @@ body.nav-open {
 
 @media (min-width: 960px) {
   .form-page {
-    margin: 0 0 0 auto;
+    max-width: 1100px;
+    margin: 0 auto;
     padding: var(--space-16) var(--space-10) calc(var(--space-16) * 1.5);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+      "intro form"
+      "intro status";
+    gap: var(--space-16);
+    align-items: start;
+  }
+
+  .form-page__intro {
+    grid-area: intro;
+    margin-bottom: 0;
+  }
+
+  .form {
+    grid-area: form;
+  }
+
+  .form__status {
+    grid-area: status;
   }
 
   .form-page__intro .eyebrow {
