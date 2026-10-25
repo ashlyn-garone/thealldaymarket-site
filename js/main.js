@@ -84,6 +84,26 @@ if (revealEls.length && 'IntersectionObserver' in window) {
   revealEls.forEach((el) => el.classList.add('is-visible'));
 }
 
+// --- Accordion sections (stock categories, FAQ) ----------------------------
+// These are <details>/<summary> elements so mobile/tablet gets a real,
+// accessible collapse-with-caret for free, closed by default. At the
+// desktop breakpoint they should just read as always-expanded, non-
+// collapsible content — forcing that via CSS alone doesn't work, since
+// browsers hide collapsed <details> content through an internal mechanism
+// that `display` can't override, so the real `open` property has to be
+// set directly.
+
+const accordionEls = document.querySelectorAll('.stock__category, .faq__item');
+
+function syncAccordionsForViewport() {
+  if (window.innerWidth >= DESKTOP_BREAKPOINT) {
+    accordionEls.forEach((el) => { el.open = true; });
+  }
+}
+
+window.addEventListener('resize', syncAccordionsForViewport);
+syncAccordionsForViewport();
+
 // --- Inquiry forms (request, support) --------------------------------------
 // Both forms submit to Web3Forms' JSON API so the page never navigates: on
 // success the form is swapped for an inline confirmation, and on failure an

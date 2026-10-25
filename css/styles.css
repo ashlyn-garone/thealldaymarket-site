@@ -15,6 +15,7 @@
 
   /* Homepage palette (from Figma variables) */
   --color-cream: #faf8f4;
+  --color-tan: #f3eee5;
   --color-ivory: #ede5d3;
   --color-ember: #e85726;
   --color-on-dark: #f6ebe8;
@@ -460,6 +461,11 @@ body.nav-open {
 /* ---------- Benefits ---------- */
 
 .benefits {
+  background: var(--color-tan);
+  border-top: 1px solid var(--color-ivory);
+}
+
+.benefits__inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-8);
@@ -536,9 +542,141 @@ body.nav-open {
   border-radius: 16px;
 }
 
+/* ---------- What we stock ---------- */
+
+.stock {
+  border-top: 1px solid var(--color-ivory);
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.stock__intro {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.stock__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-8);
+}
+
+.stock__category h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
+}
+
+.stock__category summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  margin-bottom: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.stock__category summary::-webkit-details-marker {
+  display: none;
+}
+
+.stock__category summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 200ms ease;
+}
+
+.stock__category[open] summary::after {
+  transform: rotate(-135deg);
+}
+
+.stock__category ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.stock__category li {
+  padding: var(--space-3) 0;
+  border-top: 1px solid var(--color-ivory);
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
+.stock__category li:last-child {
+  border-bottom: 1px solid var(--color-ivory);
+}
+
+/* ---------- How to get started ---------- */
+
+.process {
+  border-top: 1px solid var(--color-ivory);
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+.process__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.process__steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-6);
+}
+
+.process__step {
+  padding-top: var(--space-4);
+  border-top: 1px solid var(--color-ivory);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.process__number {
+  font-weight: 600;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
+.process__step h3 {
+  margin: 0;
+  font-weight: 600;
+  font-size: var(--subhead-bold-size-m);
+  line-height: var(--subhead-bold-line-m);
+}
+
+.process__step p {
+  margin: 0;
+  font-weight: 400;
+  font-size: var(--body-size-m);
+  line-height: var(--body-line-m);
+}
+
 /* ---------- FAQ ---------- */
 
+.faq__header {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
 .faq {
+  border-top: 1px solid var(--color-ivory);
   padding: var(--space-8) var(--space-6);
   display: flex;
   flex-direction: column;
@@ -555,6 +693,8 @@ body.nav-open {
   display: flex;
   flex-direction: column;
   gap: var(--space-2);
+  border-bottom: 1px solid var(--color-ivory);
+  padding-bottom: var(--space-4);
 }
 
 .faq__item h3 {
@@ -562,6 +702,34 @@ body.nav-open {
   font-weight: 600;
   font-size: var(--subhead-bold-size-m);
   line-height: var(--subhead-bold-line-m);
+}
+
+.faq__item summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  cursor: pointer;
+  list-style: none;
+}
+
+.faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq__item summary::after {
+  content: '';
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  transition: transform 200ms ease;
+}
+
+.faq__item[open] summary::after {
+  transform: rotate(-135deg);
 }
 
 .faq__item p {
@@ -576,6 +744,10 @@ body.nav-open {
 }
 
 /* ---------- Audience grid ---------- */
+
+.audience {
+  border-top: 1px solid var(--color-ivory);
+}
 
 .audience__grid {
   display: grid;
@@ -639,6 +811,11 @@ body.nav-open {
    `order` on every item since this pairing differs from both the mobile
    single-column order and the desktop 4-up row layout. */
 @media (min-width: 768px) and (max-width: 959px) {
+  .stock__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-8);
+  }
+
   .audience__grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -778,7 +955,7 @@ body.nav-open {
   .hero__floater--san-pellegrino { width: 98px; }
   .hero__floater--boulder-chips { width: 133px; }
 
-  .benefits {
+  .benefits__inner {
     gap: var(--space-16);
     padding: var(--space-16);
     max-width: 1440px;
@@ -851,6 +1028,62 @@ body.nav-open {
     border-radius: 9999px;
   }
 
+  .stock {
+    gap: var(--space-10);
+    padding: var(--space-16);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .stock__intro .body-text {
+    font-size: var(--subhead-size-d);
+    line-height: var(--subhead-line-d);
+    max-width: 640px;
+  }
+
+  .stock__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: var(--space-16);
+  }
+
+  .stock__category h3 {
+    font-size: var(--subhead-bold-size-d);
+    line-height: var(--subhead-bold-line-d);
+  }
+
+  .stock__category li {
+    font-size: var(--body-size-d);
+    line-height: var(--body-line-d);
+  }
+
+  .process {
+    gap: var(--space-10);
+    padding: var(--space-16);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .process__header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .process__steps {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-16);
+  }
+
+  .process__step h3 {
+    font-size: var(--subhead-bold-size-d);
+    line-height: var(--subhead-bold-line-d);
+  }
+
+  .process__step p {
+    font-size: var(--body-size-d);
+    line-height: var(--body-line-d);
+  }
+
   .faq {
     flex-direction: row;
     align-items: flex-start;
@@ -860,7 +1093,7 @@ body.nav-open {
     margin: 0 auto;
   }
 
-  .faq > .heading {
+  .faq > .faq__header {
     flex: 0 0 410px;
   }
 
@@ -868,6 +1101,23 @@ body.nav-open {
     flex: 1;
     max-width: 831px;
     gap: 48px;
+  }
+
+  /* Accordion collapse (caret + closed-by-default) is a mobile/tablet
+     pattern only — desktop always shows everything expanded. The actual
+     open/closed state is forced via the real `open` property in JS
+     (see js/main.js): browsers hide collapsed <details> content through
+     an internal mechanism that plain `display` CSS can't override, so
+     forcing it open is the only reliable way to do this. */
+  .stock__category summary,
+  .faq__item summary {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .stock__category summary::after,
+  .faq__item summary::after {
+    display: none;
   }
 
   .faq .btn {
