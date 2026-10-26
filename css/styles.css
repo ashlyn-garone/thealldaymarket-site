@@ -220,12 +220,6 @@ button:focus-visible {
   padding: var(--space-4);
 }
 
-.btn--large {
-  font-size: var(--button-large-size-d);
-  line-height: var(--button-large-size-d);
-  padding: var(--space-6);
-}
-
 .btn:hover,
 .btn:active {
   background: var(--color-midnight);
@@ -356,7 +350,7 @@ body.nav-open {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 760px;
+  height: 85vh;
 }
 
 .hero__content {
@@ -366,7 +360,7 @@ body.nav-open {
   flex-direction: column;
   align-items: center;
   gap: var(--space-6);
-  width: 310px;
+  width: 340px;
   text-align: center;
 }
 
@@ -417,7 +411,7 @@ body.nav-open {
   --orbit-rx: clamp(185px, calc(185px + (100vw - 390px) * 0.3305), 532px);
   --orbit-ry: clamp(259px, calc(259px + (100vw - 390px) * 0.0610), 323px);
   pointer-events: none;
-  animation: hero-orbit 40s linear infinite;
+  animation: hero-orbit 80s linear infinite;
 }
 
 @keyframes hero-orbit {
@@ -449,27 +443,61 @@ body.nav-open {
     rotate(var(--angle));
 }
 
-.hero__floater--diet-coke { --offset: 0deg; width: 65px; }
-.hero__floater--potato-crisp { --offset: 45deg; width: 58px; }
-.hero__floater--fiji-water { --offset: 90deg; width: 54px; }
-.hero__floater--green-snack { --offset: 135deg; width: 56px; }
-.hero__floater--poppi { --offset: 180deg; width: 45px; }
-.hero__floater--reeses { --offset: 225deg; width: 64px; }
-.hero__floater--san-pellegrino { --offset: 270deg; width: 52px; }
-.hero__floater--boulder-chips { --offset: 315deg; width: 63px; }
+.hero__floater--diet-coke { --offset: 0deg; width: 41px; }
+.hero__floater--potato-crisp { --offset: 45deg; width: 47px; }
+.hero__floater--fiji-water { --offset: 90deg; width: 35px; }
+.hero__floater--green-snack { --offset: 135deg; width: 36px; }
+.hero__floater--poppi { --offset: 180deg; width: 29px; }
+.hero__floater--reeses { --offset: 225deg; width: 45px; }
+.hero__floater--san-pellegrino { --offset: 270deg; width: 29px; }
+.hero__floater--boulder-chips { --offset: 315deg; width: 40px; }
+
+/* Second, outer ring: same mechanics as the inner ring (reuses
+   `.hero__floaters img`'s transform/--hero-spin formula since this
+   container shares the `.hero__floaters` base class), just a wider
+   orbit, spinning the opposite direction (-360deg vs 360deg), and
+   slower (112s vs 80s) so the two rings read as independent layers
+   instead of one busier ring. */
+.hero__floaters--outer {
+  --orbit-rx: clamp(287px, calc(287px + (100vw - 390px) * 0.4131), 721px);
+  --orbit-ry: clamp(380px, calc(380px + (100vw - 390px) * 0.0763), 460px);
+  animation: hero-orbit-reverse 112s linear infinite;
+}
+
+@keyframes hero-orbit-reverse {
+  to {
+    --hero-spin: -360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__floaters--outer {
+    animation: none;
+  }
+}
+
+.hero__floater-outer--almonds { --offset: 0deg; width: 37px; }
+.hero__floater-outer--yogurt { --offset: 36deg; width: 41px; }
+.hero__floater-outer--coffee { --offset: 72deg; width: 31px; }
+.hero__floater-outer--pizza-wrap { --offset: 108deg; width: 41px; }
+.hero__floater-outer--sandwich { --offset: 144deg; width: 41px; }
+.hero__floater-outer--energy { --offset: 180deg; width: 31px; }
+.hero__floater-outer--granola { --offset: 216deg; width: 34px; }
+.hero__floater-outer--oats { --offset: 252deg; width: 34px; }
+.hero__floater-outer--juice { --offset: 288deg; width: 31px; }
+.hero__floater-outer--pretzels { --offset: 324deg; width: 34px; }
 
 /* ---------- Benefits ---------- */
 
 .benefits {
   background: var(--color-tan);
-  border-top: 1px solid var(--color-ivory);
 }
 
 .benefits__inner {
   display: grid;
   grid-template-columns: 1fr;
   gap: var(--space-8);
-  padding: var(--space-8) var(--space-6);
+  padding: calc(var(--space-8) + 24px) var(--space-6);
   grid-template-areas:
     'intro'
     'open-copy'
@@ -545,8 +573,7 @@ body.nav-open {
 /* ---------- What we stock ---------- */
 
 .stock {
-  border-top: 1px solid var(--color-ivory);
-  padding: var(--space-8) var(--space-6);
+  padding: calc(var(--space-8) + 24px) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -556,6 +583,10 @@ body.nav-open {
   display: flex;
   flex-direction: column;
   gap: var(--space-4);
+}
+
+.stock__intro .eyebrow + .heading {
+  margin-top: calc(-1 * var(--space-4));
 }
 
 .stock__grid {
@@ -617,11 +648,20 @@ body.nav-open {
   border-bottom: 1px solid var(--color-ivory);
 }
 
+.stock__footnote {
+  margin: var(--space-3) 0 0;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 14px;
+  color: var(--color-ink);
+  opacity: 0.6;
+}
+
 /* ---------- How to get started ---------- */
 
 .process {
-  border-top: 1px solid var(--color-ivory);
-  padding: var(--space-8) var(--space-6);
+  background: var(--color-tan);
+  padding: calc(var(--space-8) + 24px) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-8);
@@ -675,9 +715,12 @@ body.nav-open {
   gap: var(--space-2);
 }
 
+.faq__header .eyebrow + .heading {
+  margin-top: calc(-1 * var(--space-2));
+}
+
 .faq {
-  border-top: 1px solid var(--color-ivory);
-  padding: var(--space-8) var(--space-6);
+  padding: calc(var(--space-8) + 24px) var(--space-6);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
@@ -745,8 +788,9 @@ body.nav-open {
 
 /* ---------- Audience grid ---------- */
 
+
 .audience {
-  border-top: 1px solid var(--color-ivory);
+  padding: 24px 0;
 }
 
 .audience__grid {
@@ -932,13 +976,9 @@ body.nav-open {
     letter-spacing: 1.6px;
   }
 
-  .hero {
-    height: 1000px;
-  }
-
   .hero__content {
-    max-width: 635px;
-    width: 635px;
+    max-width: 700px;
+    width: 700px;
   }
 
   .hero__content .body-text {
@@ -946,14 +986,41 @@ body.nav-open {
     line-height: var(--subhead-line-d);
   }
 
-  .hero__floater--diet-coke { width: 131px; }
-  .hero__floater--potato-crisp { width: 110px; }
-  .hero__floater--fiji-water { width: 93px; }
-  .hero__floater--green-snack { width: 115px; }
-  .hero__floater--poppi { width: 84px; }
-  .hero__floater--reeses { width: 129px; }
-  .hero__floater--san-pellegrino { width: 98px; }
-  .hero__floater--boulder-chips { width: 133px; }
+  .btn--large {
+    font-size: var(--button-large-size-d);
+    line-height: var(--button-large-size-d);
+    padding: var(--space-6);
+  }
+
+  .hero__floaters {
+    --orbit-rx: clamp(169px, calc(169px + (100vw - 390px) * 0.3305), 516px);
+    --orbit-ry: clamp(243px, calc(243px + (100vw - 390px) * 0.0610), 307px);
+  }
+
+  .hero__floaters--outer {
+    --orbit-rx: clamp(271px, calc(271px + (100vw - 390px) * 0.4131), 705px);
+    --orbit-ry: clamp(364px, calc(364px + (100vw - 390px) * 0.0763), 444px);
+  }
+
+  .hero__floater--diet-coke { width: 66px; }
+  .hero__floater--potato-crisp { width: 71px; }
+  .hero__floater--fiji-water { width: 47px; }
+  .hero__floater--green-snack { width: 58px; }
+  .hero__floater--poppi { width: 43px; }
+  .hero__floater--reeses { width: 73px; }
+  .hero__floater--san-pellegrino { width: 42px; }
+  .hero__floater--boulder-chips { width: 67px; }
+
+  .hero__floater-outer--almonds { width: 56px; }
+  .hero__floater-outer--yogurt { width: 62px; }
+  .hero__floater-outer--coffee { width: 48px; }
+  .hero__floater-outer--pizza-wrap { width: 62px; }
+  .hero__floater-outer--sandwich { width: 64px; }
+  .hero__floater-outer--energy { width: 48px; }
+  .hero__floater-outer--granola { width: 52px; }
+  .hero__floater-outer--oats { width: 52px; }
+  .hero__floater-outer--juice { width: 48px; }
+  .hero__floater-outer--pretzels { width: 52px; }
 
   .benefits__inner {
     gap: var(--space-16);

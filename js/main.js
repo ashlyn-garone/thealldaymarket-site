@@ -104,6 +104,81 @@ function syncAccordionsForViewport() {
 window.addEventListener('resize', syncAccordionsForViewport);
 syncAccordionsForViewport();
 
+// Animate open/close on mobile/tablet, where these are real collapsible
+// accordions (desktop forces them open and disables the summary via
+// `pointer-events: none`, so this class never gets a click to handle
+// there). Native <details> snaps open/closed instantly; this plays a
+// height transition instead, following the open/close recipe from
+// web.dev's details/summary animation guide.
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+class AnimatedAccordion {
+  constructor(el) {
+    this.el = el;
+    this.summary = el.querySelector('summary');
+    this.animation = null;
+    this.isClosing = false;
+    this.isExpanding = false;
+    this.summary.addEventListener('click', (event) => this.onClick(event));
+  }
+
+  onClick(event) {
+    if (prefersReducedMotion) return;
+    event.preventDefault();
+    this.el.style.overflow = 'hidden';
+    if (this.isClosing || !this.el.open) {
+      this.open();
+    } else if (this.isExpanding || this.el.open) {
+      this.shrink();
+    }
+  }
+
+  shrink() {
+    this.isClosing = true;
+    const startHeight = `${this.el.offsetHeight}px`;
+    const endHeight = `${this.summary.offsetHeight}px`;
+
+    if (this.animation) this.animation.cancel();
+    this.animation = this.el.animate(
+      { height: [startHeight, endHeight] },
+      { duration: 300, easing: 'ease-out' }
+    );
+    this.animation.onfinish = () => this.onAnimationFinish(false);
+    this.animation.oncancel = () => { this.isClosing = false; };
+  }
+
+  open() {
+    this.el.style.height = `${this.el.offsetHeight}px`;
+    this.el.open = true;
+    window.requestAnimationFrame(() => this.expand());
+  }
+
+  expand() {
+    this.isExpanding = true;
+    const startHeight = `${this.el.offsetHeight}px`;
+    const endHeight = `${this.el.scrollHeight}px`;
+
+    if (this.animation) this.animation.cancel();
+    this.animation = this.el.animate(
+      { height: [startHeight, endHeight] },
+      { duration: 300, easing: 'ease-out' }
+    );
+    this.animation.onfinish = () => this.onAnimationFinish(true);
+    this.animation.oncancel = () => { this.isExpanding = false; };
+  }
+
+  onAnimationFinish(open) {
+    this.el.open = open;
+    this.animation = null;
+    this.isClosing = false;
+    this.isExpanding = false;
+    this.el.style.height = '';
+    this.el.style.overflow = '';
+  }
+}
+
+accordionEls.forEach((el) => new AnimatedAccordion(el));
+
 // --- Inquiry forms (request, support) --------------------------------------
 // Both forms submit to Web3Forms' JSON API so the page never navigates: on
 // success the form is swapped for an inline confirmation, and on failure an
